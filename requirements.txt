@@ -1,0 +1,5 @@
+chromadb==0.4.24
+ollama==0.1.7
+pydantic==2.6.3
+streamlit==1.32.0
+pandas==2.2.1

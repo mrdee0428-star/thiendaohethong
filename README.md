@@ -1,69 +1,60 @@
-# 🗡️ Xianxia Agentic Writer: Thiên Đạo Hệ Thống (V2: Hóa Thần Cảnh)
+# 🗡️ Xianxia Agentic Writer: Thiên Đạo Hệ Thống (V3: Đại Thừa Cảnh)
 
 ![Status](https://img.shields.io/badge/Status-Active-success)
 ![Style](https://img.shields.io/badge/Style-Nhĩ_Căn_DNA-darkred)
 ![Architecture](https://img.shields.io/badge/Architecture-Master--Worker_SubAgents-blue)
-![Framework](https://img.shields.io/badge/Framework-OpenClaw_V2-orange)
+![Database](https://img.shields.io/badge/VectorDB-Chroma%20%2B%20Ollama%20(Local)-brightgreen)
+![Framework](https://img.shields.io/badge/Framework-OpenClaw_V3-orange)
 
-Một framework AI sáng tác tiểu thuyết Tiên Hiệp siêu dài kỳ (1000+ chương), được thiết kế đặc biệt để **tiêu diệt triệt để hội chứng "mù ngữ cảnh" (hallucination)** của LLM khi xử lý cốt truyện đồ sộ. Dự án mang đậm tinh thần **"DNA Nhĩ Căn"**: Tàn khốc, logic nhân quả chặt chẽ, không "bàn tay vàng", nhân vật phụ có não, và sức mạnh luôn đi kèm với huyết lệ cùng cái giá phải trả.
+Một framework AI sáng tác tiểu thuyết Tiên Hiệp siêu dài kỳ (1000+ chương), được thiết kế đặc biệt để **tiêu diệt triệt để hội chứng "mù ngữ cảnh" (hallucination)** của LLM khi xử lý cốt truyện đồ sộ. Dự án mang đậm tinh thần **"DNA Nhĩ Căn"**: Tàn khốc, logic nhân quả chặt chẽ, không "bàn tay vàng", và sức mạnh luôn đi kèm với huyết lệ.
+
+Bản V3 (Đại Thừa Cảnh) được nâng cấp toàn diện dựa trên chỉ dụ của **Quân Chủ (Dũng Meow)**, tập trung vào **Local Vector Search**, **Xử lý xung đột đồng thời (Concurrency Control)** và **Đo lường Đạo Tâm (Metrics)**.
 
 ---
 
 ## ⚙️ Kiến Trúc Hệ Thống (System Architecture)
 
-Hệ thống được xây dựng trên nền tảng **OpenClaw**, áp dụng mô hình **Master-Worker (Tổng Quản - Phân Thân)** để cách ly ngữ cảnh (context isolation) và tối ưu hóa token.
+> Xem chi tiết sơ đồ tại: [ARCHITECTURE.md](ARCHITECTURE.md)
 
-### 1. Master Agent: Lãng Khách (Tổng Quản)
-- **Vai trò:** Là bộ não trung tâm (Orchestrator/Router), trực tiếp nhận lệnh từ **Quân Chủ** (Người dùng).
-- **Chức năng:** Điều phối các Sub-agent (Khí Linh), cấp phát tài nguyên, truy vấn cơ sở dữ liệu, và tổng hợp kết quả để báo cáo cho Quân Chủ. Tích hợp **Luân Hồi Điện (Task Queue)** để xử lý bất đồng bộ (Async).
+Hệ thống hoạt động theo mô hình **Master-Worker (Tổng Quản - Phân Thân)**, kết hợp **Async Task Queue (Luân Hồi Điện)**.
 
-### 2. Worker Agents: Ngũ Đại Khí Linh (Sub-Agents)
-Các Khí Linh được cấu trúc với **Khế Ước Ràng Buộc (Agent Contracts)** - mọi Input/Output đều được chuẩn hóa bằng JSON Schema/YAML để tránh đứt gãy dây chuyền (Chain Reaction).
-1. 👤 **ĐÔNG TỬ (Character AI):** Chuyên trách đúc nặn nhân vật, khai thác chấp niệm.
-2. 🗺️ **THIÊN CƠ TỬ (Worldbuilding AI):** Thiết lập quy luật thiên đạo, cảnh giới, cái giá phải trả.
-3. 🕸️ **MỘNG YỂM (Plot AI):** Phác thảo Outline từng Quyển (Arc), rải plot-twist.
-4. ✍️ **HUYẾT THỦ (Writer AI):** Chủ bút. Chịu trách nhiệm xuất văn bản với văn phong tang thương.
-5. 👁️ **CHÂN NHÂN (Reviewer AI):** Kẻ gác cổng tàn khốc. Rà soát logic và thiết lập.
+1. **Master Agent (Lãng Khách):** Trọng tài tối cao, bộ định tuyến (Router), và người giữ chìa khóa khóa (Mutex Lock) vào cơ sở dữ liệu.
+2. **Worker Agents (Ngũ Đại Khí Linh):** `Đông Tử` (Character), `Thiên Cơ Tử` (Worldbuilding), `Mộng Yểm` (Plot), `Huyết Thủ` (Writer), `Chân Nhân` (Reviewer). Các Khí Linh chạy song song, giao tiếp qua JSON Schema khép kín (xem [API.md](API.md)).
 
 ---
 
-## 📡 Giao Tiếp & Giải Quyết Xung Đột (Inter-Agent Protocol)
+## 📜 Tinh Thần Hải (Vectorized Database & Semantic Search)
 
-Khắc phục tình trạng thắt cổ chai (Bottleneck) và mâu thuẫn logic của kỷ nguyên trước:
+Markdown file chỉ là giao diện hiển thị. Cốt lõi của Tàng Kinh Các đã được nâng cấp thành **Tinh Thần Hải** để chống "Mù Ngữ Cảnh" với chi phí = 0:
 
-### 1. Luân Hồi Điện (Async Task Queue)
-Lãng Khách không còn là điểm nghẽn cổ chai (Single Point of Failure). Các tác vụ không phụ thuộc nhau (như tạo Worldbuilding và tạo Nhân vật phụ) sẽ được đẩy vào Luân Hồi Điện để **chạy song song (Parallel Execution)**.
-
-### 2. Trọng Tài Chi Thuật (Arbitration & Consensus)
-Nếu Mộng Yểm (Plot) phác thảo một tình tiết mâu thuẫn với Thiên Cơ Tử (Worldbuilding), hệ thống sẽ không lặp vô hạn. Dữ liệu trong Tàng Kinh Các (Config Vault) được coi là **Canonical Source of Truth**. Lãng Khách sẽ làm Trọng Tài: Ép Plot phải uốn theo Worldbuilding, không có ngoại lệ.
-
-### 3. Cửu Trọng Thiên Kiếp (Retry Limits)
-Để tránh "Review Loop vô hạn" giữa Huyết Thủ (Viết) và Chân Nhân (Duyệt), hệ thống thiết lập **Max Retry = 3**. Nếu qua 3 lần sửa mà vẫn không đạt Đạo Tâm, tiến trình sẽ tạm ngưng và réo gọi **Quân Chủ (Manual Override)** định đoạt sinh tử của chương truyện đó.
+- **Vector Database:** `ChromaDB` (Chạy local, không lưu trữ đám mây, bảo mật tuyệt đối).
+- **Embedding Model:** `nomic-embed-text` thông qua `Ollama` (Local 100%, tốn 0 đồng, tốc độ cực cao).
+- **Cơ chế Truy Vấn (Top-K Retrieval):** Khi Huyết Thủ cần viết cảnh giao tranh, Lãng Khách chỉ quét Vector DB và lấy ra 3-5 mẩu thông tin (chunks) liên quan nhất (ví dụ: vũ khí, kẻ thù hiện tại), giúp giảm tải Context Window xuống dưới 1000 tokens/lần gọi.
+- **Thần Thức Tỏa (Mutex Lock):** Chống Race Condition. Khi Đông Tử đang ghi dữ liệu vào 1 file, các Khí Linh khác phải vào hàng chờ (Queue), Lãng Khách sẽ hợp nhất (Merge) tuần tự.
 
 ---
 
-## 📜 Vạn Tượng Tàng Kinh Các (Vectorized Database)
+## ⚖️ Luật Đạo Tranh & Trảm Đứt Vòng Lặp (Conflict Resolution)
 
-Bản nâng cấp tối thượng để đáp ứng quy mô 1000+ chương. Thư mục Markdown giờ đây chỉ là bề nổi (Frontend) cho con người đọc. Bên dưới, hệ thống được cường hóa bằng **Tinh Thần Hải (Vector DB / Embeddings)**.
-
-*   **Semantic Search thay vì Keyword Search:** Khi truy vấn "kẻ thù hệ hỏa của main", hệ thống sẽ dùng Vector Search để lôi ra toàn bộ nhân quả, vũ khí, và pháp tắc liên quan cực kỳ nhanh chóng và chính xác, không sợ phình to dữ liệu.
-
-- 🩸 **`/characters/` (Nhân Quả Tuyến)**
-- ⚖️ **`/laws/` (Thiên Đạo Pháp Tắc)**
-- 💍 **`/items/` (Thần Khí & Inventory)**
-- 🏛️ **`/factions/` (Thế Lực)**
-- ⏳ **`/timeline/` (Kỷ Nguyên Lịch)**
+- **Trọng Tài Mâu Thuẫn:** Dữ liệu trong `docs/database/` (Vector DB) là **Canonical Source of Truth**. Nếu Plot (Mộng Yểm) mâu thuẫn với Worldbuilding (Thiên Cơ Tử), Lãng Khách sẽ vả mặt Mộng Yểm, ép Plot phải tuân theo thiết lập thế giới.
+- **Đạo Kiếp Giới Hạn (Max Retries = 3):** Chân Nhân (Reviewer) chỉ được quyền bắt Huyết Thủ (Writer) sửa tối đa 3 lần. Nếu lần 4 vẫn trượt bài test logic, tiến trình sinh chương bị đóng băng ➔ Chuyển sang file `PENDING_APPROVAL.md` chờ Quân Chủ định đoạt sinh tử.
 
 ---
 
-## 🚀 Trình Tự Sáng Thế (Execution Workflow)
+## 📊 Mệnh Bàn & Đạo Tâm Đo Lường (Logging & Metrics)
 
-1. **Khởi Nguyên:** Quân Chủ ban hạ ý tưởng vào `PROJECT_DNA.md`.
-2. **Khai Thiên (Parallel):** Lãng Khách xuất lệnh đồng thời cho `Đông Tử` và `Thiên Cơ Tử`. Lấp đầy Tàng Kinh Các. Cấu trúc hóa thành Vector Embeddings.
-3. **Bố Cục:** `Mộng Yểm` tải Embeddings để đẻ ra Outline Arc 1 (từng chương).
-4. **Hạ Bút:** Lãng Khách mớm (inject) context từ Vector DB cho `Huyết Thủ`. `Huyết Thủ` sinh bản nháp.
-5. **Đạo Kiếp:** Draft đẩy sang `Chân Nhân`. Nếu tẩu hỏa nhập ma, phạt sửa (Max 3 lần). Nếu thất bại, gọi Quân Chủ. Nếu PASS, lưu vào Kỷ Nguyên Lịch.
-6. **Mệnh Bàn (Logging):** Toàn bộ trạng thái sống/chết, tiến độ của các Khí Linh được ghi log realtime để Quân Chủ theo dõi.
+- **Mệnh Bàn (Streamlit Dashboard):** Giao diện UI local đọc từ `logs/system_state.jsonl`. Quân Chủ có thể theo dõi realtime Khí Linh nào đang chạy, tốn bao nhiêu token, và trạng thái chương đang viết.
+- **Thước Đo Đạo Tâm (Metrics):**
+  - *Logic Consistency Score (0-100):* LLM-as-a-judge (Chân Nhân) chấm điểm dựa trên Vector DB. Dưới 80 điểm (sai tên, lôi đồ không có trong inventory ra xài) ➔ Bắt viết lại.
+  - *Writing Quality Score (0-100):* Đếm mật độ từ vựng cổ phong, phạt điểm nếu lặp lại các câu sáo rỗng ("hít một ngụm khí lạnh").
 
 ---
-*"Đạo pháp tự nhiên, nhưng Tu tiên là Nghịch thiên! Chỉ có quy luật sắt đá mới chống lại được sự hỗn mang của Ký Ức!"*
+
+## 🛠️ Khởi Động Kỷ Nguyên Mới (Quick Start)
+
+1. Cài đặt Python dependencies: `pip install -r requirements.txt`
+2. Cài đặt và bật [Ollama](https://ollama.ai/), pull model: `ollama pull nomic-embed-text`
+3. Xem mẫu Hạt Giống Sáng Thế tại: `examples/PROJECT_DNA_sample.md`
+4. Khởi chạy Mệnh Bàn: `streamlit run dashboard.py` (Script đang được kiến tạo)
+
+*"Đạo pháp tự nhiên, nhưng Tu tiên là Nghịch thiên!"*
