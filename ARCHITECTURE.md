@@ -4,8 +4,8 @@ Hệ thống Sáng Thế của chúng ta được chia làm 3 Tầng Giới (Lay
 
 ## 1. Sơ Đồ Tổng Quan (Data Flow)
 
-```mermaid
-graph TD
+
+
     QC([Quân Chủ / Người Dùng]) -->|Ban Hạt Giống| LK(Lãng Khách - Master Agent)
     LK -->|Giao Task| LHD((Luân Hồi Điện - Async Task Queue))
     
